@@ -1,0 +1,5 @@
+**.pickle
+.idea/**
+__pycache__/**
+**/__pycache__/**
+execute/smac3_output/**

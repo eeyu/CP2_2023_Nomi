@@ -5,6 +5,7 @@ from abc import ABCMeta, abstractmethod
 import itertools as it
 from matplotlib import gridspec
 from scipy.spatial.distance import pdist, squareform
+import path
 
 def onehot_and_flatten(grids):
     grids_oh = (np.arange(5) == grids[...,None]).astype(int)
@@ -14,7 +15,7 @@ def onehot_and_flatten(grids):
 def load_grids():
     grids = []
     for i in range(5):
-        g = np.load(f"datasets/grids_{i}.npy")
+        g = np.load(path.HOME_PATH + f"datasets/grids_{i}.npy")
         grids.append(g)
     grids = np.concatenate(grids)
     return grids
