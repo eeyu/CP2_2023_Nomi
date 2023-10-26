@@ -6,23 +6,22 @@ import matplotlib.pyplot as plt
 from torch.nn import Module
 import torch
 from sklearn.metrics import r2_score
-
+torch.manual_seed(path.seed)
 
 
 # Hyperparameters
-advisor = 2
-select_from_file = True
+# advisor = 1
 
-model, batch_size = train.load_model_from_file()
-# advisor == 0: 0.885
-# advisor == 1: GOOD!! 0.99
-# advisor == 2: 0.83
-# advisor == 3: GOOD!! 0.967
+model, batch_size, advisor = train.load_model_from_file()
+# advisor == 0: 0.885 / 0.844
+# advisor == 1: GOOD!! 0.98 / 0.97
+# advisor == 2: 0.91 / 0.81 (R4)
+# advisor == 3: GOOD!! 0.967 / 0.95
 
 
 
 dataset = train.AdvisorDataset(advisor)
-dataloader = train.GenerateDataloader(dataset=dataset, batch_size=batch_size, nval=0.15, ntest=0.15)
+dataloader = train.GenerateDataloader(dataset=dataset, batch_size=batch_size, nval=0.15, ntest=0.25)
 
 
 def get_predictions_actual_for_data(model : Module, dataloader):

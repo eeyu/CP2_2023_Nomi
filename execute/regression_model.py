@@ -159,14 +159,14 @@ class WideNetParameters(ModelParameters):
 
 	def get_configuration_space(self) -> ConfigurationSpace:
 		return ConfigurationSpace({
-			"pad1": (1, 3),
-			"channel1": (1, 20),
-			"width_pad1": (0, 4),
-			"pad2": (1, 3),
-			"channel2": (1, 20),
-			"width_pad2": (0, 4),
-			"fc2": (3, 20),
-			"fc3": (3, 20)
+			"pad1": (2, 3),
+			"channel1": (15, 25),
+			"width_pad1": (3, 5),
+			"pad2": (2, 3),
+			"channel2": (15, 25),
+			"width_pad2": (3, 5),
+			"fc2": (7, 20),
+			"fc3": (7, 20)
 		})
 
 	def set_from_configuration(self, config : Configuration):

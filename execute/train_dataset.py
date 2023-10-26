@@ -131,11 +131,12 @@ def load_model(model : Module, name):
     model.load_state_dict(torch.load(path.PARAM_PATH + "_" + name))
     model.eval()
 
-def save_model_and_hp(model : Module, hyperparam : ModelParameters, batch_size, name):
+def save_model_and_hp(model : Module, hyperparam : ModelParameters, batch_size, advisor, name):
     dict = {}
     dict["param"] = model.state_dict()
     dict["hyperparam"] = hyperparam
     dict["batch_size"] = batch_size
+    dict["advisor"] = advisor
     with open(path.PARAM_PATH + "_" + name, 'wb') as handle:
         pickle.dump(dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -150,7 +151,7 @@ def load_model_from_file():
 
         model = hyperparam.instantiate_new_model()
         model.load_state_dict(param)
-        return model, batch_size
+        return model, batch_size, dict["advisor"]
 
 def get_save_name(advisor, modelName, algName, run_index, extension):
     return "A" + str(advisor) + "_" + "R" + str(run_index) + "_" + modelName + "_" + algName  + extension

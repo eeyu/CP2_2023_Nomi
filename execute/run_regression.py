@@ -18,32 +18,35 @@ import torch
 import time
 import pickle
 from OptimizationParameters import AdamOptimizationParameters
+import torch
+import path
+torch.manual_seed(path.seed)
 
 # Hyperparameters
 advisor = 2
 # layout = TestNetParameters(
 #     pad1=1,
-#     channel1=5,
+#     channel1=14,
 #     pad2=1,
-#     channel2=5,
-#     fc2=10) # encode this layout
+#     channel2=2,
+#     fc2=14) # encode this layout
 layout = WideNetParameters(
-    pad1=1,
-    channel1=5,
-    width_pad1=2,
-    pad2=1,
-    channel2=5,
-    width_pad2=1,
-    fc2=10,
-    fc3=10) # encode this layout
-run_index = "TEST_WIDE"
+    pad1=2,
+    channel1=20,
+    width_pad1=4,
+    pad2=2,
+    channel2=17,
+    width_pad2=4,
+    fc2=13,
+    fc3=7) # encode this layout
+run_index = "D3"
 
 # Run optimization
 optParam = AdamOptimizationParameters(
-    INIT_LR=1.324e-4,
-    WEIGHT_DECAY=1.5983e-5,
-    BATCH_SIZE=64,
-    EPOCHS=50)
+    INIT_LR=3.1e-03,
+    WEIGHT_DECAY=6.8e-05,
+    BATCH_SIZE=512,
+    EPOCHS=300)
 
 
 # model = TestNet(layout)
@@ -57,4 +60,4 @@ val_dataloader = dataloader.valDataLoader
 train.train(model=model, opt=opt, trainDataLoader=train_dataloader, valDataLoader=val_dataloader, epochs=optParam.EPOCHS)
 save_name = train.get_save_name(advisor=advisor, modelName=layout.getName(), algName=optParam.getName(), run_index=run_index, extension=".pickle")
 # train.save_model(model, save_name)
-train.save_model_and_hp(model, layout, batch_size=optParam.BATCH_SIZE, name=save_name)
+train.save_model_and_hp(model, layout, batch_size=optParam.BATCH_SIZE, name=save_name, advisor=advisor)

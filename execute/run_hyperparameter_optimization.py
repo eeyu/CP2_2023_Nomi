@@ -5,18 +5,20 @@ from ConfigSpace import Configuration, ConfigurationSpace
 from smac import HyperparameterOptimizationFacade, Scenario
 from torch.optim import Adam
 from OptimizationParameters import AdamOptimizationParameters
+import torch
+import path
+torch.manual_seed(path.seed)
 
 advisor = 2
-run_index = 3
+run_index = "D4"
 model_param = WideNetParameters()
 BATCH_SIZE = 512
 
 NUM_TRIALS = 50
-MAX_EPOCHS = 300
+MAX_EPOCHS = 500
 
-iteration = 0
 dataset = train.AdvisorDataset(advisor)
-dataloader = train.GenerateDataloader(dataset=dataset, batch_size=BATCH_SIZE, nval=0.15, ntest=0.15)
+dataloader = train.GenerateDataloader(dataset=dataset, batch_size=BATCH_SIZE, nval=0.15, ntest=0.25)
 
 
 def merge_config_space(configspace1 : ConfigurationSpace, configspace2 : ConfigurationSpace):
@@ -36,11 +38,16 @@ def convert_config_to_param(config : Configuration, modelParam : ModelParameters
 
     # Run optimization
     optParam = AdamOptimizationParameters(
+        # INIT_LR=config["INIT_LR"],
+        # WEIGHT_DECAY=config["WEIGHT_DECAY"],
         INIT_LR=config["INIT_LR"],
         WEIGHT_DECAY=config["WEIGHT_DECAY"],
         BATCH_SIZE=BATCH_SIZE,
         EPOCHS=MAX_EPOCHS)
     return modelParam, optParam
+
+
+iteration = 0
 
 
 def train_loop(config : Configuration, seed : int=0) -> float:
@@ -82,4 +89,4 @@ train.train(model=model, opt=opt, trainDataLoader=train_dataloader, valDataLoade
 
 # Save training from best parameters
 save_name = train.get_save_name(advisor=advisor, modelName=layout.getName(), algName=optParam.getName(), run_index=str(run_index), extension=".pickle")
-train.save_model_and_hp(model=model, hyperparam=layout, batch_size=BATCH_SIZE, name=save_name)
+train.save_model_and_hp(model=model, hyperparam=layout, batch_size=BATCH_SIZE, name=save_name, advisor=advisor)
