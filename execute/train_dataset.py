@@ -24,7 +24,7 @@ def train(model : Module, trainDataLoader, valDataLoader, opt, epochs, run_name 
     device = path.device
     lossFn = nn.MSELoss()
     num_steps_without_improvement = 0
-    max_steps_no_improvement = 10
+    max_steps_no_improvement = 20
     best_validation_loss = 100 # large number
     best_parameters = model.state_dict()
 
@@ -48,7 +48,6 @@ def train(model : Module, trainDataLoader, valDataLoader, opt, epochs, run_name 
             loss.backward()
             opt.step()
             # add the loss to the total training loss so far and
-            # calculate the number of correct predictions
             totalTrainLoss += loss.item() / len(trainDataLoader.dataset)
         print("- train loss: \t" + "{:.5e}".format(totalTrainLoss))
 
@@ -154,4 +153,4 @@ def load_model_from_file():
         return model, batch_size
 
 def get_save_name(advisor, modelName, algName, run_index, extension):
-    return "A" + str(advisor) + "_" + modelName + "_" + algName + "_" + "R" + str(run_index) + extension
+    return "A" + str(advisor) + "_" + "R" + str(run_index) + "_" + modelName + "_" + algName  + extension

@@ -1,43 +1,29 @@
 import path
 from utils_public import *
-import numpy as np
 import train_dataset as train
-import pandas as pd
-from regression_model import TestNet, TestNetParameters
 
-from sklearn.metrics import classification_report
-from torch.utils.data import random_split
-from torch.utils.data import DataLoader
-from torchvision.transforms import ToTensor
-from torchvision.datasets import KMNIST
-from torch.optim import Adam
-from torch import nn
 import matplotlib.pyplot as plt
-import numpy as np
 from torch.nn import Module
-import argparse
 import torch
-import time
-import pickle
-from OptimizationParameters import AdamOptimizationParameters
+from sklearn.metrics import r2_score
+
 
 
 # Hyperparameters
-advisor = 3
+advisor = 2
 select_from_file = True
 
 model, batch_size = train.load_model_from_file()
-# if advisor == 0: # 0.885
-# elif advisor == 1: # GOOD!! 0.99
-# elif advisor == 2: # 0.83
-# else: # 3 0.967 GOOD!!
+# advisor == 0: 0.885
+# advisor == 1: GOOD!! 0.99
+# advisor == 2: 0.83
+# advisor == 3: GOOD!! 0.967
 
 
 
 dataset = train.AdvisorDataset(advisor)
 dataloader = train.GenerateDataloader(dataset=dataset, batch_size=batch_size, nval=0.15, ntest=0.15)
 
-from sklearn.metrics import r2_score
 
 def get_predictions_actual_for_data(model : Module, dataloader):
     with torch.no_grad():

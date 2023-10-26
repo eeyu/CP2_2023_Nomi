@@ -1,6 +1,6 @@
 
 from dataclasses import dataclass
-from ConfigSpace import Configuration, ConfigurationSpace
+from ConfigSpace import Configuration, ConfigurationSpace, Float
 
 @dataclass
 class AdamOptimizationParameters:
@@ -18,7 +18,8 @@ class AdamOptimizationParameters:
 
     @staticmethod
     def get_configuration_space() -> ConfigurationSpace:
-        return ConfigurationSpace({
-            "INIT_LR": (1e-05, 1e-02),
-            "WEIGHT_DECAY": (1e-05, 1e-02),
-        })
+        return ConfigurationSpace(
+            {
+                "INIT_LR": Float("INIT_LR", bounds=(1e-05, 1e-02), log=True),
+                "WEIGHT_DECAY": Float("WEIGHT_DECAY", bounds=(1e-05, 1e-02), log=True),
+            })

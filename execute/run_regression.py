@@ -2,7 +2,7 @@ from utils_public import *
 import numpy as np
 import train_dataset as train
 import pandas as pd
-from regression_model import TestNet, TestNetParameters
+from regression_model import TestNet, TestNetParameters, WideNetParameters
 
 from sklearn.metrics import classification_report
 from torch.utils.data import random_split
@@ -20,14 +20,23 @@ import pickle
 from OptimizationParameters import AdamOptimizationParameters
 
 # Hyperparameters
-advisor = 0
-layout = TestNetParameters(
+advisor = 2
+# layout = TestNetParameters(
+#     pad1=1,
+#     channel1=5,
+#     pad2=1,
+#     channel2=5,
+#     fc2=10) # encode this layout
+layout = WideNetParameters(
     pad1=1,
     channel1=5,
+    width_pad1=2,
     pad2=1,
     channel2=5,
-    fc2=10) # encode this layout
-run_index = "TEST_SAVE"
+    width_pad2=1,
+    fc2=10,
+    fc3=10) # encode this layout
+run_index = "TEST_WIDE"
 
 # Run optimization
 optParam = AdamOptimizationParameters(
@@ -46,6 +55,6 @@ train_dataloader = dataloader.trainDataLoader
 val_dataloader = dataloader.valDataLoader
 
 train.train(model=model, opt=opt, trainDataLoader=train_dataloader, valDataLoader=val_dataloader, epochs=optParam.EPOCHS)
-save_name = train.get_save_name(advisor=advisor, modelName=layout.getName(), algName=optParam.getName(), run_index=run_index)
+save_name = train.get_save_name(advisor=advisor, modelName=layout.getName(), algName=optParam.getName(), run_index=run_index, extension=".pickle")
 # train.save_model(model, save_name)
 train.save_model_and_hp(model, layout, batch_size=optParam.BATCH_SIZE, name=save_name)
