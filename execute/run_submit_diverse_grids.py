@@ -65,16 +65,16 @@ if __name__ == "__main__":
     labels = clustering.get_labels(X=flattened_grids, num_clusters=num_clusters)
 
     # Sample grids from each cluster
-    # indices_to_submit = []
-    # for label in range(num_clusters):
-    #     indices = np.array(list(range(num_more_grids)))
-    #     indices_for_label = indices[labels==label]
-    #     print(indices_for_label)
-    #     random_sampled_indices = np.random.choice(indices_for_label, size=num_samples_per_cluster, replace=False)
-    #     indices_to_submit += random_sampled_indices.tolist()
-    #
-    # indices_to_submit = indices_to_submit[0:num_grids_to_sample]
-    indices_to_submit = np.random.choice(list(range(num_more_grids)), size=num_grids_to_sample, replace=False)
+    indices_to_submit = []
+    for label in range(num_clusters):
+        indices = np.array(list(range(num_more_grids)))
+        indices_for_label = indices[labels==label]
+        print(indices_for_label)
+        random_sampled_indices = np.random.choice(indices_for_label, size=num_samples_per_cluster, replace=False)
+        indices_to_submit += random_sampled_indices.tolist()
+
+    indices_to_submit = indices_to_submit[0:num_grids_to_sample]
+    # indices_to_submit = np.random.choice(list(range(num_more_grids)), size=num_grids_to_sample, replace=False)
     # Obtain the grids and add to original list
     grids = default_grids
     print(indices_to_submit)
