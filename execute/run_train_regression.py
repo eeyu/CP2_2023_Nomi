@@ -1,6 +1,6 @@
 from utils_public import *
 import numpy as np
-import train_dataset as train
+import training_dataset as train
 import pandas as pd
 from regression_model import TestNet, TestNetParameters, WideNetParameters
 
@@ -23,37 +23,37 @@ import path
 torch.manual_seed(path.seed)
 
 # Hyperparameters
-advisor = 2
-# layout = TestNetParameters(
-#     pad1=1,
-#     channel1=14,
-#     pad2=1,
-#     channel2=2,
-#     fc2=14) # encode this layout
-layout = WideNetParameters(
-    pad1=2,
-    channel1=20,
-    width_pad1=4,
-    pad2=2,
-    channel2=17,
-    width_pad2=4,
-    fc2=13,
-    fc3=7) # encode this layout
-run_index = "D3"
+advisor = 1
+layout = TestNetParameters(
+    pad1=1,
+    channel1=5,
+    pad2=1,
+    channel2=5,
+    fc2=15) # encode this layout
+# layout = WideNetParameters(
+#     pad1=2,
+#     channel1=35,
+#     width_pad1=4,
+#     pad2=2,
+#     channel2=35,
+#     width_pad2=4,
+#     fc2=15,
+#     fc3=30) # encode this layout
+run_index = "D1"
 
 # Run optimization
 optParam = AdamOptimizationParameters(
-    INIT_LR=3.1e-03,
-    WEIGHT_DECAY=6.8e-05,
-    BATCH_SIZE=512,
-    EPOCHS=300)
+    INIT_LR=5.0e-04,
+    WEIGHT_DECAY=5.0e-5,
+    BATCH_SIZE=256,
+    EPOCHS=500)
 
 
 # model = TestNet(layout)
 model = layout.instantiate_new_model()
 opt = Adam(model.parameters(), lr=optParam.INIT_LR, weight_decay=optParam.WEIGHT_DECAY)
 dataset = train.AdvisorDataset(advisor)
-dataloader = train.GenerateDataloader(dataset=dataset, batch_size=optParam.BATCH_SIZE, nval=0.15, ntest=0.15)
+dataloader = train.GenerateDataloader(dataset=dataset, batch_size=optParam.BATCH_SIZE, nval=0.15, ntest=0.25)
 train_dataloader = dataloader.trainDataLoader
 val_dataloader = dataloader.valDataLoader
 

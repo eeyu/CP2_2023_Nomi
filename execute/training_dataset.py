@@ -1,13 +1,5 @@
 from torch.nn import Module
-from torch.nn import Conv2d
-from torch.nn import Linear
-from torch.nn import MaxPool2d
-from torch.nn import ReLU
-from torch.nn import LogSoftmax
-from torch import flatten
 from torch.nn import functional as F
-from dataclasses import dataclass
-import numpy as np
 import pickle
 import torch
 import torch.nn as nn
@@ -15,16 +7,17 @@ from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 import custom_tools as ct
 import path
-from regression_model import ModelParameters
+from execute.regression_model import ModelParameters
 
 import utils_public as ut
 from tkinter import Tk     # from tkinter import Tk for Python 3.x
 from tkinter.filedialog import askopenfilename
 def train(model : Module, trainDataLoader, valDataLoader, opt, epochs, run_name = ""):
     device = path.device
+    model=model.to(device)
     lossFn = nn.MSELoss()
     num_steps_without_improvement = 0
-    max_steps_no_improvement = 20
+    max_steps_no_improvement = 50
     best_validation_loss = 100 # large number
     best_parameters = model.state_dict()
 
@@ -80,10 +73,12 @@ def train(model : Module, trainDataLoader, valDataLoader, opt, epochs, run_name 
     model.load_state_dict(best_parameters)
     return model.state_dict(), best_validation_loss
 
+# Pass in n x [7 x 7] for n grids. Always a list
 def get_one_hot(grids):
-    grids_oh = F.one_hot(torch.tensor(grids).type(torch.int64)).permute(0, 3, 1, 2) #[data, x1, x2, encode] -> [data, encode, x1, x2]
-    # grids_oh = (np.arange(5) == grids[..., None]).astype(float)
+    grids_oh = F.one_hot(torch.tensor(grids).type(torch.int64), 5).permute(0, 3, 1, 2)
     return grids_oh
+
+
 
 # This one-hot encodes the labelled data for a given advisor
 class AdvisorDataset(Dataset):
@@ -140,9 +135,12 @@ def save_model_and_hp(model : Module, hyperparam : ModelParameters, batch_size, 
     with open(path.PARAM_PATH + "_" + name, 'wb') as handle:
         pickle.dump(dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-def load_model_from_file():
-    Tk().withdraw()  # we don't want a full GUI, so keep the root window from appearing
-    filename = askopenfilename(initialdir="../parameters", defaultextension="pickle")  # show an "Open" dialog box and return the path to the selected file
+def load_model_from_file(file: str | None = None):
+    if file is None:
+        Tk().withdraw()  # we don't want a full GUI, so keep the root window from appearing
+        filename = askopenfilename(initialdir="../parameters", defaultextension="pickle")  # show an "Open" dialog box and return the path to the selected file
+    else:
+        filename = file
     with open(filename, 'rb') as handle:
         dict = pickle.load(handle)
         hyperparam : ModelParameters = dict["hyperparam"]
@@ -151,6 +149,7 @@ def load_model_from_file():
 
         model = hyperparam.instantiate_new_model()
         model.load_state_dict(param)
+        model = model.to(device=path.device)
         return model, batch_size, dict["advisor"]
 
 def get_save_name(advisor, modelName, algName, run_index, extension):

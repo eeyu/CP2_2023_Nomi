@@ -1,6 +1,6 @@
 import path
 from utils_public import *
-import train_dataset as train
+import training_dataset as train
 
 import matplotlib.pyplot as plt
 from torch.nn import Module
@@ -13,9 +13,9 @@ torch.manual_seed(path.seed)
 # advisor = 1
 
 model, batch_size, advisor = train.load_model_from_file()
-# advisor == 0: 0.885 / 0.844
+# advisor == 0: (R2) 0.94 / 0.869, (H1) 0.948 / 0.952
 # advisor == 1: GOOD!! 0.98 / 0.97
-# advisor == 2: 0.91 / 0.81 (R4)
+# advisor == 2: 0.96 / 0.815 (R4), R5: 0.934 / 0.852, r7: 0.939/0.868, R16: 0.914 / 0.910
 # advisor == 3: GOOD!! 0.967 / 0.95
 
 
@@ -37,7 +37,7 @@ def get_predictions_actual_for_data(model : Module, dataloader):
             # send the input to the device
             x = x.to(path.device)
             # make the predictions and add them to the list
-            pred = model(x)
+            pred = model(x).to("cpu")
             preds.extend(pred.numpy())
             actual.extend(y.numpy())
 

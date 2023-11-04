@@ -45,7 +45,7 @@ def plot_grid_image(grid, on_ax=None):
     names = ["Residential", "Industrial", "Commercial", "Park", "Office"]
     sprites = []
     for i in range(5):
-        file = f"sprites/{names[i]}.jpg"
+        file = path.HOME_PATH + f"sprites/{names[i]}.jpg"
         img = PIL.Image.open(file)
         img = np.array(img)
         sprites.append(img)

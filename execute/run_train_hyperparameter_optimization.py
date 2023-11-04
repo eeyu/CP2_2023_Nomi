@@ -1,4 +1,4 @@
-import train_dataset as train
+import training_dataset as train
 from regression_model import TestNetParameters, ModelParameters, WideNetParameters
 
 from ConfigSpace import Configuration, ConfigurationSpace
@@ -9,12 +9,12 @@ import torch
 import path
 torch.manual_seed(path.seed)
 
-advisor = 2
-run_index = "D4"
+advisor = 0
+run_index = "H1"
 model_param = WideNetParameters()
-BATCH_SIZE = 512
+BATCH_SIZE = 256
 
-NUM_TRIALS = 50
+NUM_TRIALS = 100
 MAX_EPOCHS = 500
 
 dataset = train.AdvisorDataset(advisor)

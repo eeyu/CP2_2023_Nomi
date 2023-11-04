@@ -14,3 +14,14 @@ def get_one_hot(grids):
     grids_oh = (np.arange(5) == grids[..., None]).astype(float)
     return grids_oh
 
+def generate_random_grids(num_grids):
+    # numpy_grids = np.random.randint(0, 5, size=(num_grids, 7, 7))
+    p = np.array([1, 1, 1, 1, 1])
+    # 3 likes industrial and 1 likes commercial, residential
+    p = p / np.sum(p)
+    return np.random.choice(np.arange(5), size = (num_grids,7,7), p=p) #Randomly Sample Grids
+    # return numpy_grids
+
+if __name__ == "__main__":
+    print(generate_random_grids(5))
+
