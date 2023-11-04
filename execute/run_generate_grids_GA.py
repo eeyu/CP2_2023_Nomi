@@ -52,10 +52,10 @@ class GenerateGrids(ElementwiseProblem):
             # if mechanism is invalid set the objective to infinity
             out["F"] = [np.Inf, np.Inf, np.Inf, np.Inf]
         else:
-            out["F"] = [scores[0],
-                        scores[1],
-                        scores[2],
-                        scores[3]]
+            out["F"] = [-scores[0],
+                        -scores[1],
+                        -scores[2],
+                        -scores[3]]
         out["G"] = [-(scores[0] - self.min_score),
                     -(scores[1] - self.min_score),
                     -(scores[2] - self.min_score),
@@ -149,7 +149,7 @@ if __name__ == "__main__":
     grids = load_grids_from_results(results)
 
     # save the results
-    save_name = path.get_ga_output_name(name="GA_0.9", extension=".pickle")
+    save_name = path.get_ga_output_name(name="GA_0.9_max", extension=".pickle")
     with open(save_name, 'wb') as f:
         pickle.dump(results, f)
 

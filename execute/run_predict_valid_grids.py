@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     grids = up.load_grids()
     # Load more grids generated from GA
-    more_grids = generate.load_ga_grids_from_file("GA_0.9")
+    more_grids = generate.load_ga_grids_from_file("GA_0.9_max")
     # grids = np.concatenate([grids, more_grids])
     grids = more_grids
 
@@ -48,9 +48,9 @@ if __name__ == "__main__":
     # print(good_ratings.shape)
 
     # Save those grids
-    save_name = path.get_valid_grids_name(name="GA_0.9", extension=".pickle")
-    with open(save_name, 'wb') as f:
-        pickle.dump(save, f)
+    # save_name = path.get_valid_grids_name(name="GA_0.9_max", extension=".pickle")
+    # with open(save_name, 'wb') as f:
+    #     pickle.dump(save, f)
 
 
     # top_100_indices = np.argpartition(min_predictions, -100)[-100:]  # indices of top 100 designs (as sorted by minimum advisor score)
