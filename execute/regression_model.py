@@ -59,7 +59,7 @@ class TestNetParameters(ModelParameters):
 		self.pad1=config["pad1"]
 		self.channel1=config["channel1"]
 		self.pad2=config["pad2"]
-		self.hannel2=config["channel2"]
+		self.channel2=config["channel2"]
 		self.fc2=config["fc2"]
 
 
